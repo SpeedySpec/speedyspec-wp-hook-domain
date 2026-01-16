@@ -1,0 +1,24 @@
+<?php
+
+namespace SpeedySpec\WP\Hook\Domain\Services;
+
+use SpeedySpec\WP\Hook\Domain\Contracts\HookNameInterface;
+
+class HookRunAmountService {
+
+    /**
+     * @var array<string, int>
+     */
+    private array $hooksRunAmount = [];
+
+    public function getRunAmount(HookNameInterface $name): int
+    {
+        return $this->hooksRunAmount[$name->getName()] ?? 0;
+    }
+
+    public function incrementRunAmount(HookNameInterface $name): void
+    {
+        $this->hooksRunAmount[$name->getName()] ??= 0;
+        $this->hooksRunAmount[$name->getName()]++;
+    }
+}
