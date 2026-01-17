@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace SpeedySpec\WP\Hook\Domain\Contracts;
 
-interface HookContainerInterface {
+interface HookContainerInterface
+{
     public function add(
         HookNameInterface $name,
         HookInvokableInterface|HookActionInterface|HookFilterInterface $callback

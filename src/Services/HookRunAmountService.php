@@ -6,7 +6,8 @@ namespace SpeedySpec\WP\Hook\Domain\Services;
 
 use SpeedySpec\WP\Hook\Domain\Contracts\HookNameInterface;
 
-class HookRunAmountService {
+class HookRunAmountService
+{
 
     /**
      * @var array<string, int>

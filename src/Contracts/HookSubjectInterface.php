@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace SpeedySpec\WP\Hook\Domain\Contracts;
 
-interface HookSubjectInterface {
+interface HookSubjectInterface
+{
     public function add( HookInvokableInterface|HookActionInterface|HookFilterInterface $callback ): void;
 
     public function remove( HookInvokableInterface|HookActionInterface|HookFilterInterface $callback ): void;

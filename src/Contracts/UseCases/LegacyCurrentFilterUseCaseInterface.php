@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SpeedySpec\WP\Hook\Domain\Contracts\UseCases;
 
-interface LegacyCurrentFilterUseCaseInterface {
+interface LegacyCurrentFilterUseCaseInterface
+{
     public function currentFilter(): string|false;
 }

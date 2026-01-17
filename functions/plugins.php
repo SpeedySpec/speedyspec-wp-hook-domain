@@ -205,7 +205,7 @@ function has_filter( $hook_name, $callback = false, $priority = false )
 {
     return HookServiceContainer::getInstance()
         ->get( LegacyHasFilterUseCaseInterface::class )
-        ->add( $hook_name, $callback, $priority);
+        ->hasHook( $hook_name, $callback, $priority );
 }
 
 /**
@@ -413,7 +413,8 @@ function do_action( $hook_name, ...$args )
  * @since 2.1.0 WordPress
  * @since 0.0.1 speedyspec-wp-hook-functions
  */
-function do_action_ref_array( $hook_name, $args ) {
+function do_action_ref_array( $hook_name, $args )
+{
     HookServiceContainer::getInstance()
         ->get( LegacyDispatchActionHookUseCaseInterface::class )
         ->add( 'all', ...$args );
@@ -448,10 +449,11 @@ function do_action_ref_array( $hook_name, $args ) {
  * @see has_filter()
  *   This function is an alias of has_filter().
  */
-function has_action( $hook_name, $callback = false, $priority = false ) {
+function has_action( $hook_name, $callback = false, $priority = false )
+{
     return HookServiceContainer::getInstance()
         ->get( LegacyHasActionUseCaseInterface::class )
-        ->add( $hook_name, $callback, $priority);
+        ->hasHook( $hook_name, $callback, $priority);
 }
 
 /**
@@ -475,7 +477,8 @@ function has_action( $hook_name, $callback = false, $priority = false ) {
  * @since 1.2.0 WordPress
  * @since 0.0.1 speedyspec-wp-hook-functions
  */
-function remove_action( $hook_name, $callback, $priority = 10 ) {
+function remove_action( $hook_name, $callback, $priority = 10 )
+{
     HookServiceContainer::getInstance()
         ->get( LegacyRemoveActionUseCaseInterface::class )
         ->add( $hook_name, $priority);
@@ -495,7 +498,8 @@ function remove_action( $hook_name, $callback, $priority = 10 ) {
  * @since 2.7.0 WordPress
  * @since 0.0.1 speedyspec-wp-hook-functions
  */
-function remove_all_actions( $hook_name, $priority = false ) {
+function remove_all_actions( $hook_name, $priority = false )
+{
     HookServiceContainer::getInstance()
         ->get( LegacyRemoveAllActionsUseCaseInterface::class )
         ->removeHook( $hook_name, $priority );
@@ -511,7 +515,8 @@ function remove_all_actions( $hook_name, $priority = false ) {
  * @since 3.9.0 WordPress
  * @since 0.0.1 speedyspec-wp-hook-functions
  */
-function current_action() {
+function current_action()
+{
     return HookServiceContainer::getInstance()
         ->get( LegacyCurrentActionUseCaseInterface::class )
         ->currentAction() ?? false;
@@ -537,7 +542,8 @@ function current_action() {
  * @see current_action()
  * @see did_action()
  */
-function doing_action( $hook_name = null ) {
+function doing_action( $hook_name = null )
+{
     return HookServiceContainer::getInstance()
         ->get( LegacyDoingActionUseCaseInterface::class )
         ->currentFilter() ?? false;
@@ -639,7 +645,8 @@ function do_action_deprecated( $hook_name, $args, $version, $replacement = '', $
  * @since 2.5.0 WordPress
  * @since 0.0.1 speedyspec-wp-hook-functions
  */
-function _wp_call_all_hook( $args ) {
+function _wp_call_all_hook( $args )
+{
     HookServiceContainer::getInstance()
         ->get( LegacyDispatchActionHookUseCaseInterface::class )
         ->add( 'all', ...$args );
@@ -667,7 +674,8 @@ function _wp_call_all_hook( $args ) {
  *    returns a string.
  * @since 0.0.1 speedyspec-wp-hook-functions
  */
-function _wp_filter_build_unique_id( $hook_name, $callback, $priority ) {
+function _wp_filter_build_unique_id( $hook_name, $callback, $priority )
+{
     // Leaving as is since there is no clear way of improving this function. Plugins might call it, so including here to
     // maintain compatibility.
     if ( is_string( $callback ) ) {
