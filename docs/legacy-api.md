@@ -50,7 +50,7 @@ add_filter('my_filter', ['Formatter', 'format']);
 remove_filter('my_filter', ['Formatter', 'format']); // Works!
 ```
 
-If you need closure-like behavior, use the **Modern API** with `InvokeObjectHook` instead, which gives you a reference you can use for removal.
+If you need closure-like behavior, use the **Modern API** with `ObjectHookInvoke` instead, which gives you a reference you can use for removal.
 
 ---
 

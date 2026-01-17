@@ -96,19 +96,19 @@ For new code, use the domain objects directly. Priority is now built into the ca
 use SpeedySpec\WP\Hook\Domain\HookServiceContainer;
 use SpeedySpec\WP\Hook\Domain\Contracts\HookContainerInterface;
 use SpeedySpec\WP\Hook\Domain\ValueObject\StringHookName;
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeObjectHook;
+use SpeedySpec\WP\Hook\Domain\Entities\ObjectHookInvoke;
 
 $container = HookServiceContainer::getInstance();
 $hooks = $container->get(HookContainerInterface::class);
 
 // Add a filter with priority 10 (default)
 $hookName = new StringHookName('my_filter');
-$callback = new InvokeObjectHook(fn($value) => strtoupper($value));
+$callback = new ObjectHookInvoke(fn($value) => strtoupper($value));
 
 $hooks->add($hookName, $callback);
 
 // Add a filter with custom priority
-$highPriorityCallback = new InvokeObjectHook(
+$highPriorityCallback = new ObjectHookInvoke(
     fn($value) => $value . '!',
     priority: 5  // Runs before priority 10
 );
@@ -136,7 +136,7 @@ graph TB
     subgraph "Domain Layer"
         E[HookContainerInterface]
         F[HookSubjectInterface]
-        G[Entities: InvokeStringHook, InvokeArrayHook, InvokeObjectHook]
+        G[Entities: InvokeStringHook, ArrayHookInvoke, ObjectHookInvoke]
         H[Value Objects: StringHookName, ClassNameHookName]
     end
 
@@ -175,8 +175,8 @@ src/
 │       └── Legacy*UseCaseInterface.php
 ├── Entities/               # Callback wrappers (with built-in priority)
 │   ├── InvokeStringHook.php
-│   ├── InvokeArrayHook.php
-│   └── InvokeObjectHook.php
+│   ├── ArrayHookInvoke.php
+│   └── ObjectHookInvoke.php
 ├── ValueObject/            # Immutable value types
 │   ├── StringHookName.php
 │   └── ClassNameHookName.php

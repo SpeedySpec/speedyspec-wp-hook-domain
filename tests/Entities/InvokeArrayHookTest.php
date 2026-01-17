@@ -4,56 +4,56 @@ declare(strict_types=1);
 
 use SpeedySpec\WP\Hook\Domain\Contracts\HookInvokableInterface;
 use SpeedySpec\WP\Hook\Domain\Contracts\HookPriorityInterface;
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeArrayHook;
+use SpeedySpec\WP\Hook\Domain\Entities\ArrayHookInvoke;
 use SpeedySpec\WP\Hook\Domain\Exceptions\HookIsNotCallableException;
 
-covers(InvokeArrayHook::class);
+covers(ArrayHookInvoke::class);
 
 test('implements HookInvokableInterface', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod']);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'staticMethod']);
 
     expect($hook)->toBeInstanceOf(HookInvokableInterface::class);
 });
 
 test('implements HookPriorityInterface', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod']);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'staticMethod']);
 
     expect($hook)->toBeInstanceOf(HookPriorityInterface::class);
 });
 
 test('returns default priority of 10', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod']);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'staticMethod']);
 
     expect($hook->getPriority())->toBe(10);
 });
 
 test('accepts custom priority', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod'], priority: 5);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'staticMethod'], priority: 5);
 
     expect($hook->getPriority())->toBe(5);
 });
 
 test('accepts negative priority for early execution', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod'], priority: -100);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'staticMethod'], priority: -100);
 
     expect($hook->getPriority())->toBe(-100);
 });
 
 test('accepts high priority value', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod'], priority: 999);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'staticMethod'], priority: 999);
 
     expect($hook->getPriority())->toBe(999);
 });
 
 test('returns class and method name via getName for static methods', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod']);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'staticMethod']);
 
     expect($hook->getName())->toBe('ArrayHookTestClass::staticMethod');
 });
 
 test('returns class and method name via getName for instance methods', function () {
     $instance = new ArrayHookTestClass();
-    $hook = new InvokeArrayHook([$instance, 'instanceMethod']);
+    $hook = new ArrayHookInvoke([$instance, 'instanceMethod']);
 
     $name = $hook->getName();
 
@@ -61,7 +61,7 @@ test('returns class and method name via getName for instance methods', function 
 });
 
 test('invokes static method with arguments', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod']);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'staticMethod']);
 
     $result = $hook('test');
 
@@ -70,7 +70,7 @@ test('invokes static method with arguments', function () {
 
 test('invokes instance method with arguments', function () {
     $instance = new ArrayHookTestClass();
-    $hook = new InvokeArrayHook([$instance, 'instanceMethod']);
+    $hook = new ArrayHookInvoke([$instance, 'instanceMethod']);
 
     $result = $hook('test');
 
@@ -78,19 +78,19 @@ test('invokes instance method with arguments', function () {
 });
 
 test('throws exception when array is not callable on getName', function () {
-    $hook = new InvokeArrayHook(['NonExistentClass', 'nonExistentMethod']);
+    $hook = new ArrayHookInvoke(['NonExistentClass', 'nonExistentMethod']);
 
     expect(fn() => $hook->getName())->toThrow(HookIsNotCallableException::class);
 });
 
 test('throws exception for private methods', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'privateMethod']);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'privateMethod']);
 
     expect(fn() => $hook->getName())->toThrow(HookIsNotCallableException::class);
 });
 
 test('handles methods with multiple arguments', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'multiArgMethod']);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'multiArgMethod']);
 
     $result = $hook('a', 'b', 'c');
 
@@ -98,7 +98,7 @@ test('handles methods with multiple arguments', function () {
 });
 
 test('handles methods with no arguments', function () {
-    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'noArgMethod']);
+    $hook = new ArrayHookInvoke([ArrayHookTestClass::class, 'noArgMethod']);
 
     $result = $hook();
 
@@ -108,9 +108,9 @@ test('handles methods with no arguments', function () {
 test('handles methods returning different types', function () {
     $instance = new ArrayHookTestClass();
 
-    $intHook = new InvokeArrayHook([$instance, 'returnInt']);
-    $arrayHook = new InvokeArrayHook([$instance, 'returnArray']);
-    $boolHook = new InvokeArrayHook([$instance, 'returnBool']);
+    $intHook = new ArrayHookInvoke([$instance, 'returnInt']);
+    $arrayHook = new ArrayHookInvoke([$instance, 'returnArray']);
+    $boolHook = new ArrayHookInvoke([$instance, 'returnBool']);
 
     expect($intHook())->toBe(42)
         ->and($arrayHook())->toBe(['a', 'b', 'c'])

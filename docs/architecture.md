@@ -96,8 +96,8 @@ This implements the **Observer Pattern** where:
 Callbacks are wrapped in `HookInvokableInterface` implementations, allowing different types of callables to be handled uniformly:
 
 - `InvokeStringHook` - Function name strings (e.g., `'strtoupper'`)
-- `InvokeArrayHook` - Array callables (e.g., `[$object, 'method']` or `['ClassName', 'staticMethod']`)
-- `InvokeObjectHook` - Closures and invokable objects
+- `ArrayHookInvoke` - Array callables (e.g., `[$object, 'method']` or `['ClassName', 'staticMethod']`)
+- `ObjectHookInvoke` - Closures and invokable objects
 
 This is the **Strategy Pattern** - different callback types share a common interface but have different invocation strategies.
 
@@ -141,7 +141,7 @@ classDiagram
         +getPriority() int
     }
 
-    class InvokeArrayHook {
+    class ArrayHookInvoke {
         -array callable
         -int priority
         +getName() string
@@ -149,7 +149,7 @@ classDiagram
         +getPriority() int
     }
 
-    class InvokeObjectHook {
+    class ObjectHookInvoke {
         -object callable
         -int priority
         +getName() string
@@ -158,11 +158,11 @@ classDiagram
     }
 
     HookInvokableInterface <|.. InvokeStringHook
-    HookInvokableInterface <|.. InvokeArrayHook
-    HookInvokableInterface <|.. InvokeObjectHook
+    HookInvokableInterface <|.. ArrayHookInvoke
+    HookInvokableInterface <|.. ObjectHookInvoke
     HookPriorityInterface <|.. InvokeStringHook
-    HookPriorityInterface <|.. InvokeArrayHook
-    HookPriorityInterface <|.. InvokeObjectHook
+    HookPriorityInterface <|.. ArrayHookInvoke
+    HookPriorityInterface <|.. ObjectHookInvoke
 ```
 
 ### 5. Value Objects
@@ -258,10 +258,10 @@ flowchart LR
 
 ```php
 // Priority is set in the entity constructor
-$callback1 = new InvokeObjectHook($callable, priority: 1);   // Runs first
-$callback2 = new InvokeObjectHook($callable, priority: 5);   // Runs second
-$callback3 = new InvokeObjectHook($callable, priority: 10);  // Runs third (default)
-$callback4 = new InvokeObjectHook($callable, priority: 100); // Runs last
+$callback1 = new ObjectHookInvoke($callable, priority: 1);   // Runs first
+$callback2 = new ObjectHookInvoke($callable, priority: 5);   // Runs second
+$callback3 = new ObjectHookInvoke($callable, priority: 10);  // Runs third (default)
+$callback4 = new ObjectHookInvoke($callable, priority: 100); // Runs last
 ```
 
 Callbacks at the same priority are executed in registration order.

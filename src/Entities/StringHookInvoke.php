@@ -8,7 +8,7 @@ use SpeedySpec\WP\Hook\Domain\Contracts\HookInvokableInterface;
 use SpeedySpec\WP\Hook\Domain\Contracts\HookPriorityInterface;
 use SpeedySpec\WP\Hook\Domain\Exceptions\HookIsNotCallableException;
 
-class InvokeStringHook implements HookInvokableInterface, HookPriorityInterface
+class StringHookInvoke implements HookInvokableInterface, HookPriorityInterface
 {
     public function __construct(
         private string $callable,

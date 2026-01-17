@@ -375,9 +375,9 @@ graph LR
 use SpeedySpec\WP\Hook\Domain\Contracts\UseCases\LegacyAddFilterUseCaseInterface;
 use SpeedySpec\WP\Hook\Domain\Contracts\HookContainerInterface;
 use SpeedySpec\WP\Hook\Domain\ValueObject\StringHookName;
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeStringHook;
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeArrayHook;
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeObjectHook;
+use SpeedySpec\WP\Hook\Domain\Entities\StringHookInvoke;
+use SpeedySpec\WP\Hook\Domain\Entities\ArrayHookInvoke;
+use SpeedySpec\WP\Hook\Domain\Entities\ObjectHookInvoke;
 
 class LegacyAddFilterUseCase implements LegacyAddFilterUseCaseInterface
 {
@@ -395,9 +395,9 @@ class LegacyAddFilterUseCase implements LegacyAddFilterUseCaseInterface
 
         // Priority is now passed to the entity constructor
         $invokable = match (true) {
-            is_string($callback) => new InvokeStringHook($callback, $priority),
-            is_array($callback) => new InvokeArrayHook($callback, $priority),
-            default => new InvokeObjectHook($callback, $priority),
+            is_string($callback) => new StringHookInvoke($callback, $priority),
+            is_array($callback) => new ArrayHookInvoke($callback, $priority),
+            default => new ObjectHookInvoke($callback, $priority),
         };
 
         $this->container->add($hookName, $invokable);

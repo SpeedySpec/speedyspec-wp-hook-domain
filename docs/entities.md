@@ -26,7 +26,7 @@ classDiagram
         +getPriority() int
     }
 
-    class InvokeArrayHook {
+    class ArrayHookInvoke {
         -array callable
         -int priority
         +__construct(array $callable, int $priority = 10)
@@ -35,7 +35,7 @@ classDiagram
         +getPriority() int
     }
 
-    class InvokeObjectHook {
+    class ObjectHookInvoke {
         -object callable
         -int priority
         -string name
@@ -46,11 +46,11 @@ classDiagram
     }
 
     HookInvokableInterface <|.. InvokeStringHook
-    HookInvokableInterface <|.. InvokeArrayHook
-    HookInvokableInterface <|.. InvokeObjectHook
+    HookInvokableInterface <|.. ArrayHookInvoke
+    HookInvokableInterface <|.. ObjectHookInvoke
     HookPriorityInterface <|.. InvokeStringHook
-    HookPriorityInterface <|.. InvokeArrayHook
-    HookPriorityInterface <|.. InvokeObjectHook
+    HookPriorityInterface <|.. ArrayHookInvoke
+    HookPriorityInterface <|.. ObjectHookInvoke
 ```
 
 ## Overview
@@ -58,8 +58,8 @@ classDiagram
 | Entity | Handles | Example |
 |--------|---------|---------|
 | `InvokeStringHook` | Function names | `'strtoupper'` |
-| `InvokeArrayHook` | Array callables | `[$object, 'method']`, `['Class', 'staticMethod']` |
-| `InvokeObjectHook` | Closures and invokables | `fn($x) => $x`, `new InvokableClass()` |
+| `ArrayHookInvoke` | Array callables | `[$object, 'method']`, `['Class', 'staticMethod']` |
+| `ObjectHookInvoke` | Closures and invokables | `fn($x) => $x`, `new InvokableClass()` |
 
 ---
 
@@ -119,10 +119,10 @@ $hook->getPriority(); // Returns: 5
 ### Example Usage
 
 ```php
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeStringHook;
+use SpeedySpec\WP\Hook\Domain\Entities\StringHookInvoke;
 
 // Built-in function with default priority
-$hook = new InvokeStringHook('strtoupper');
+$hook = new StringHookInvoke('strtoupper');
 echo $hook('hello'); // HELLO
 echo $hook->getPriority(); // 10
 
@@ -130,14 +130,14 @@ echo $hook->getPriority(); // 10
 function my_filter($value) {
     return $value . '_filtered';
 }
-$hook = new InvokeStringHook('my_filter', priority: 1);
+$hook = new StringHookInvoke('my_filter', priority: 1);
 echo $hook('test'); // test_filtered
 echo $hook->getPriority(); // 1
 ```
 
 ---
 
-## InvokeArrayHook
+## ArrayHookInvoke
 
 Wraps array-style callables for execution, supporting both object methods and static methods.
 
@@ -167,11 +167,11 @@ Returns a unique identifier based on class and method name.
 
 ```php
 // Object method
-$hook = new InvokeArrayHook([$myObject, 'myMethod']);
+$hook = new ArrayHookInvoke([$myObject, 'myMethod']);
 $hook->getName(); // Returns: 'MyClass::myMethod'
 
 // Static method
-$hook = new InvokeArrayHook(['MyClass', 'staticMethod']);
+$hook = new ArrayHookInvoke(['MyClass', 'staticMethod']);
 $hook->getName(); // Returns: 'MyClass::staticMethod'
 ```
 
@@ -182,7 +182,7 @@ $hook->getName(); // Returns: 'MyClass::staticMethod'
 Executes the method with the given arguments.
 
 ```php
-$hook = new InvokeArrayHook([$object, 'transform']);
+$hook = new ArrayHookInvoke([$object, 'transform']);
 $result = $hook('value'); // Calls $object->transform('value')
 ```
 
@@ -191,14 +191,14 @@ $result = $hook('value'); // Calls $object->transform('value')
 Returns the execution priority.
 
 ```php
-$hook = new InvokeArrayHook([$object, 'method'], priority: 20);
+$hook = new ArrayHookInvoke([$object, 'method'], priority: 20);
 $hook->getPriority(); // Returns: 20
 ```
 
 ### Example Usage
 
 ```php
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeArrayHook;
+use SpeedySpec\WP\Hook\Domain\Entities\ArrayHookInvoke;
 
 // Object method with default priority
 class MyProcessor {
@@ -208,7 +208,7 @@ class MyProcessor {
 }
 
 $processor = new MyProcessor();
-$hook = new InvokeArrayHook([$processor, 'process']);
+$hook = new ArrayHookInvoke([$processor, 'process']);
 echo $hook('hello'); // HELLO
 echo $hook->getPriority(); // 10
 
@@ -219,14 +219,14 @@ class Formatter {
     }
 }
 
-$hook = new InvokeArrayHook(['Formatter', 'format'], priority: 100);
+$hook = new ArrayHookInvoke(['Formatter', 'format'], priority: 100);
 echo $hook('test'); // [test]
 echo $hook->getPriority(); // 100
 ```
 
 ---
 
-## InvokeObjectHook
+## ObjectHookInvoke
 
 Wraps closures and invokable objects for execution.
 
@@ -256,13 +256,13 @@ Returns a unique identifier based on the object's hash.
 
 For closures:
 ```php
-$hook = new InvokeObjectHook(fn($x) => $x);
+$hook = new ObjectHookInvoke(fn($x) => $x);
 $hook->getName(); // Returns: 'abc123...' (spl_object_hash)
 ```
 
 For invokable objects:
 ```php
-$hook = new InvokeObjectHook(new MyInvokable());
+$hook = new ObjectHookInvoke(new MyInvokable());
 $hook->getName(); // Returns: 'abc123...::__invoke'
 ```
 
@@ -273,7 +273,7 @@ $hook->getName(); // Returns: 'abc123...::__invoke'
 Executes the callable with the given arguments.
 
 ```php
-$hook = new InvokeObjectHook(fn($x) => $x * 2);
+$hook = new ObjectHookInvoke(fn($x) => $x * 2);
 $result = $hook(5); // Returns: 10
 ```
 
@@ -282,17 +282,17 @@ $result = $hook(5); // Returns: 10
 Returns the execution priority.
 
 ```php
-$hook = new InvokeObjectHook(fn($x) => $x, priority: 5);
+$hook = new ObjectHookInvoke(fn($x) => $x, priority: 5);
 $hook->getPriority(); // Returns: 5
 ```
 
 ### Example Usage
 
 ```php
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeObjectHook;
+use SpeedySpec\WP\Hook\Domain\Entities\ObjectHookInvoke;
 
 // Closure with early priority
-$hook = new InvokeObjectHook(
+$hook = new ObjectHookInvoke(
     fn($value) => $value . '_processed',
     priority: 1
 );
@@ -301,7 +301,7 @@ echo $hook->getPriority(); // 1
 
 // Arrow function with context
 $multiplier = 3;
-$hook = new InvokeObjectHook(fn($x) => $x * $multiplier);
+$hook = new ObjectHookInvoke(fn($x) => $x * $multiplier);
 echo $hook(5); // 15
 
 // Invokable class with late priority
@@ -311,7 +311,7 @@ class Transformer {
     }
 }
 
-$hook = new InvokeObjectHook(new Transformer(), priority: 100);
+$hook = new ObjectHookInvoke(new Transformer(), priority: 100);
 echo $hook('hello'); // HELLO
 echo $hook->getPriority(); // 100
 ```
@@ -339,13 +339,13 @@ All entities include priority as a constructor parameter:
 
 ```php
 // Early execution (priority 1)
-$early = new InvokeObjectHook(fn($x) => $x, priority: 1);
+$early = new ObjectHookInvoke(fn($x) => $x, priority: 1);
 
 // Default priority (10)
-$default = new InvokeObjectHook(fn($x) => $x);
+$default = new ObjectHookInvoke(fn($x) => $x);
 
 // Late execution (priority 100)
-$late = new InvokeObjectHook(fn($x) => $x, priority: 100);
+$late = new ObjectHookInvoke(fn($x) => $x, priority: 100);
 ```
 
 ### Priority Guidelines
@@ -368,20 +368,20 @@ function createInvokable(callable $callback, int $priority = 10): HookInvokableI
 {
     return match (true) {
         is_string($callback) => new InvokeStringHook($callback, $priority),
-        is_array($callback)  => new InvokeArrayHook($callback, $priority),
-        default              => new InvokeObjectHook($callback, $priority),
+        is_array($callback)  => new ArrayHookInvoke($callback, $priority),
+        default              => new ObjectHookInvoke($callback, $priority),
     };
 }
 
 // Examples
-createInvokable('strtoupper');              // InvokeStringHook
-createInvokable([$obj, 'method']);          // InvokeArrayHook
-createInvokable(['Class', 'static']);       // InvokeArrayHook
-createInvokable(fn($x) => $x);              // InvokeObjectHook
-createInvokable(new Invokable());           // InvokeObjectHook
+createInvokable('strtoupper');              // StringHookInvoke
+createInvokable([$obj, 'method']);          // ArrayHookInvoke
+createInvokable(['Class', 'static']);       // ArrayHookInvoke
+createInvokable(fn($x) => $x);              // ObjectHookInvoke
+createInvokable(new Invokable());           // ObjectHookInvoke
 
 // With priority
-createInvokable('strtoupper', priority: 5); // InvokeStringHook with priority 5
+createInvokable('strtoupper', priority: 5); // StringHookInvoke with priority 5
 ```
 
 ---
@@ -391,11 +391,11 @@ createInvokable('strtoupper', priority: 5); // InvokeStringHook with priority 5
 All entities throw `HookIsNotCallableException` when the callback is invalid:
 
 ```php
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeStringHook;
+use SpeedySpec\WP\Hook\Domain\Entities\StringHookInvoke;
 use SpeedySpec\WP\Hook\Domain\Exceptions\HookIsNotCallableException;
 
 try {
-    $hook = new InvokeStringHook('nonexistent_function');
+    $hook = new StringHookInvoke('nonexistent_function');
     $hook->getName(); // Throws exception
 } catch (HookIsNotCallableException $e) {
     // Handle invalid callback
@@ -410,6 +410,6 @@ Entities are effectively immutable after construction:
 - The callable is set once in the constructor
 - The priority is set once in the constructor
 - There are no setter methods
-- The `getName()` result is cached in `InvokeObjectHook`
+- The `getName()` result is cached in `ObjectHookInvoke`
 
 This ensures consistent behavior when callbacks are stored and retrieved from the hook container.

@@ -69,7 +69,7 @@ $hookName->getName(); // Returns: 'wp_footer'
 
 ```php
 use SpeedySpec\WP\Hook\Domain\ValueObject\StringHookName;
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeObjectHook;
+use SpeedySpec\WP\Hook\Domain\Entities\ObjectHookInvoke;
 
 // Standard WordPress hooks
 $initHook = new StringHookName('init');
@@ -82,7 +82,7 @@ $customHook = new StringHookName('my_plugin_action');
 // Using with container
 $container->add(
     $initHook,
-    new InvokeObjectHook(fn() => doSomething())
+    new ObjectHookInvoke(fn() => doSomething())
 );
 
 $container->dispatch($initHook);
@@ -142,7 +142,7 @@ $hookName->getName(); // Returns: 'App\Events\UserCreated'
 
 ```php
 use SpeedySpec\WP\Hook\Domain\ValueObject\ClassNameHookName;
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeObjectHook;
+use SpeedySpec\WP\Hook\Domain\Entities\ObjectHookInvoke;
 
 // Define event classes
 namespace App\Events;
@@ -158,7 +158,7 @@ $postPublishedHook = new ClassNameHookName(PostPublished::class);
 // Register handlers with priority in the entity
 $container->add(
     $userCreatedHook,
-    new InvokeObjectHook(
+    new ObjectHookInvoke(
         fn($event) => handleUserCreated($event),
         priority: 10
     )
@@ -343,7 +343,7 @@ $container->add($hookName, $invokable, $options);
 **After (current):**
 ```php
 // Priority is now part of the entity
-$invokable = new InvokeObjectHook(
+$invokable = new ObjectHookInvoke(
     fn($value) => strtoupper($value),
     priority: 10  // Priority passed directly to entity
 );
