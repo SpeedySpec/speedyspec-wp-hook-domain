@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace SpeedySpec\WP\Hook\Domain\Entities;
 
 use SpeedySpec\WP\Hook\Domain\Contracts\HookInvokableInterface;
+use SpeedySpec\WP\Hook\Domain\Contracts\HookPriorityInterface;
 use SpeedySpec\WP\Hook\Domain\Exceptions\HookIsNotCallableException;
 
-class InvokeObjectHook implements HookInvokableInterface
+class ObjectHookInvoke implements HookInvokableInterface, HookPriorityInterface
 {
     private string $name;
 
     public function __construct(
         private object $callable,
+        private int $priority = 10,
     ) {
         $this->name = $this->getCachedName();
     }
@@ -40,5 +42,10 @@ class InvokeObjectHook implements HookInvokableInterface
             method_exists($this->callable, '__invoke') => $objectName . '::' . '__invoke',
             default => $objectName . '::' . 'call',
         };
+    }
+
+    public function getPriority(): int
+    {
+        return $this->priority;
     }
 }
