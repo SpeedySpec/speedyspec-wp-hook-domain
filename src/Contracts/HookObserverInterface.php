@@ -7,10 +7,10 @@ namespace SpeedySpec\WP\Hook\Domain\Contracts;
 use ReturnTypeWillChange;
 
 interface HookObserverInterface {
-    public function dispatch(...$args): void;
+    public function dispatch( ...$args ): void;
 
     #[ReturnTypeWillChange]
-    public function filter(mixed $value, ...$args): mixed;
+    public function filter( mixed $value, ...$args ): mixed;
 
-    public function validate(...$args): bool;
+    public function validate( ...$args ): bool;
 }

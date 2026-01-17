@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace SpeedySpec\WP\Hook\Domain;
 
-final class ServiceContainerRegistry
+final class HookServiceContainer
 {
     private array $serviceProvider = [];
 
     private array $instanceCache = [];
 
-    private static ServiceContainerRegistry $instance;
+    private static HookServiceContainer $instance;
 
     private function __construct()
     {
@@ -49,7 +49,7 @@ final class ServiceContainerRegistry
      */
     public function get(string $reference): object {
         if (!isset($this->serviceProvider[$reference])) {
-            throw new \RuntimeException("Service Provider $reference is not registered");
+            throw new \RuntimeException("Service $reference is not registered");
         }
         return $this->instanceCache[$reference] ??= ($this->serviceProvider[$reference])(static::$instance);
     }

@@ -8,5 +8,5 @@ interface HookInvokableInterface
 {
     public function getName(): string;
 
-    public function __invoke(...$args): mixed;
+    public function __invoke( ...$args ): mixed;
 }

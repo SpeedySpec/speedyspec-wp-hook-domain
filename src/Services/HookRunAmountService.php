@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SpeedySpec\WP\Hook\Domain\Services;
 
 use SpeedySpec\WP\Hook\Domain\Contracts\HookNameInterface;

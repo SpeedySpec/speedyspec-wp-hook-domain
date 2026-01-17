@@ -6,5 +6,4 @@ namespace SpeedySpec\WP\Hook\Domain\Exceptions;
 
 class HookIsNotCallableException extends \InvalidArgumentException
 {
-
 }

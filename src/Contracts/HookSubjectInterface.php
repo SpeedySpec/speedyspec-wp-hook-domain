@@ -12,9 +12,9 @@ interface HookSubjectInterface {
 
     public function remove( HookInvokableInterface $callback, HookInvokableOption $options ): void;
 
-    public function dispatch( ...$args,): void;
+    public function dispatch( ...$args ): void;
 
-    public function filter(mixed $value, ...$args): mixed;
+    public function filter( mixed $value, ...$args ): mixed;
 
     public function sort(): void;
 }

@@ -19,6 +19,9 @@ class ClassNameHookName implements \SpeedySpec\WP\Hook\Domain\Contracts\HookName
     {
     }
 
+    /**
+     * @return class-name
+     */
     public function getName(): string
     {
         return $this->name;

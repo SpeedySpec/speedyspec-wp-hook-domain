@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-use SpeedySpec\WP\Hook\Domain\ServiceContainerRegistry;
+use SpeedySpec\WP\Hook\Domain\HookServiceContainer;
 
-covers(ServiceContainerRegistry::class);
+covers(HookServiceContainer::class);
 
 test('getInstance returns singleton instance', function () {
-    $instance1 = ServiceContainerRegistry::getInstance();
-    $instance2 = ServiceContainerRegistry::getInstance();
+    $instance1 = HookServiceContainer::getInstance();
+    $instance2 = HookServiceContainer::getInstance();
 
     expect($instance1)->toBe($instance2);
 });
 
 test('add registers a service provider', function () {
-    $registry = ServiceContainerRegistry::getInstance();
+    $registry = HookServiceContainer::getInstance();
 
     $result = $registry->add(\stdClass::class, fn() => new \stdClass());
 
@@ -22,7 +22,7 @@ test('add registers a service provider', function () {
 });
 
 test('get returns registered service', function () {
-    $registry = ServiceContainerRegistry::getInstance();
+    $registry = HookServiceContainer::getInstance();
     $registry->add(TestServiceClass::class, fn() => new TestServiceClass('test'));
 
     $service = $registry->get(TestServiceClass::class);
@@ -32,7 +32,7 @@ test('get returns registered service', function () {
 });
 
 test('get caches service instance', function () {
-    $registry = ServiceContainerRegistry::getInstance();
+    $registry = HookServiceContainer::getInstance();
     $callCount = 0;
 
     $registry->add(CachedServiceClass::class, function () use (&$callCount) {
@@ -48,14 +48,14 @@ test('get caches service instance', function () {
 });
 
 test('get throws exception when service not registered', function () {
-    $registry = ServiceContainerRegistry::getInstance();
+    $registry = HookServiceContainer::getInstance();
 
     expect(fn() => $registry->get('NonExistentServiceXYZ'))
         ->toThrow(\RuntimeException::class, 'NonExistentServiceXYZ is not registered');
 });
 
 test('remove unregisters a service provider', function () {
-    $registry = ServiceContainerRegistry::getInstance();
+    $registry = HookServiceContainer::getInstance();
     $registry->add(RemovableServiceClass::class, fn() => new RemovableServiceClass());
 
     $result = $registry->remove(RemovableServiceClass::class);
@@ -66,7 +66,7 @@ test('remove unregisters a service provider', function () {
 });
 
 test('add allows method chaining', function () {
-    $registry = ServiceContainerRegistry::getInstance();
+    $registry = HookServiceContainer::getInstance();
 
     $result = $registry
         ->add(ChainedServiceA::class, fn() => new ChainedServiceA())
@@ -76,7 +76,7 @@ test('add allows method chaining', function () {
 });
 
 test('remove allows method chaining', function () {
-    $registry = ServiceContainerRegistry::getInstance();
+    $registry = HookServiceContainer::getInstance();
     $registry->add(ChainRemoveA::class, fn() => new ChainRemoveA());
     $registry->add(ChainRemoveB::class, fn() => new ChainRemoveB());
 
@@ -88,7 +88,7 @@ test('remove allows method chaining', function () {
 });
 
 test('callback receives registry instance', function () {
-    $registry = ServiceContainerRegistry::getInstance();
+    $registry = HookServiceContainer::getInstance();
     $receivedRegistry = null;
 
     $registry->add(RegistryAwareService::class, function ($reg) use (&$receivedRegistry) {
@@ -102,7 +102,7 @@ test('callback receives registry instance', function () {
 });
 
 test('service can depend on other services', function () {
-    $registry = ServiceContainerRegistry::getInstance();
+    $registry = HookServiceContainer::getInstance();
 
     $registry->add(DependencyService::class, fn() => new DependencyService());
     $registry->add(DependentService::class, fn($reg) => new DependentService(

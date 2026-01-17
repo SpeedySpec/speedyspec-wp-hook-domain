@@ -8,7 +8,7 @@ use SpeedySpec\WP\Hook\Domain\ValueObject\StringHookName;
 class CurrentHookService
 {
     /**
-     * @param array<string, string[]> $hooks
+     * @param string[] $hooks
      * @param array<string, string[]> $callbacks
      */
     public function __construct(
@@ -22,12 +22,12 @@ class CurrentHookService
         $this->hooks[] = $name;
     }
 
-    public function removeHook(string $name): void
+    public function removeHook(): void
     {
-        if (empty($this->hooks)) {
+        if ( empty( $this->hooks ) ) {
             return;
         }
-        array_pop($this->hooks);
+        array_pop( $this->hooks );
     }
 
     public function getCurrentHook(): ?HookNameInterface
@@ -35,7 +35,7 @@ class CurrentHookService
         if (empty($this->hooks)) {
             return null;
         }
-        return new StringHookName(end($this->hooks));
+        return new StringHookName( end( $this->hooks ) );
     }
 
     public function hookTraceback(): array
@@ -48,20 +48,20 @@ class CurrentHookService
         $this->callbacks[ end( $this->hooks ) ?: 'unknown' ][] = $name;
     }
 
-    public function removeCallback(string $name): void
+    public function removeCallback(): void
     {
-        array_pop($this->callbacks[end($this->hooks) ?: 'unknown']);
+        array_pop($this->callbacks[ end( $this->hooks ) ?: 'unknown' ]);
     }
 
     public function getCurrentCallback(): ?string
     {
-        $callbacks = $this->callbacks[end($this->hooks) ?: 'unknown'] ?? [];
+        $callbacks = $this->callbacks[ end( $this->hooks ) ?: 'unknown' ] ?? [];
 
         if (empty($callbacks)) {
             return null;
         }
 
-        return end($callbacks);
+        return end( $callbacks );
     }
 
     public function callbackTraceback(): array
