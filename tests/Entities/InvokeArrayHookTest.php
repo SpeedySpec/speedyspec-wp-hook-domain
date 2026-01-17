@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use SpeedySpec\WP\Hook\Domain\Contracts\HookInvokableInterface;
+use SpeedySpec\WP\Hook\Domain\Contracts\HookPriorityInterface;
 use SpeedySpec\WP\Hook\Domain\Entities\InvokeArrayHook;
 use SpeedySpec\WP\Hook\Domain\Exceptions\HookIsNotCallableException;
 
@@ -12,6 +13,36 @@ test('implements HookInvokableInterface', function () {
     $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod']);
 
     expect($hook)->toBeInstanceOf(HookInvokableInterface::class);
+});
+
+test('implements HookPriorityInterface', function () {
+    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod']);
+
+    expect($hook)->toBeInstanceOf(HookPriorityInterface::class);
+});
+
+test('returns default priority of 10', function () {
+    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod']);
+
+    expect($hook->getPriority())->toBe(10);
+});
+
+test('accepts custom priority', function () {
+    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod'], priority: 5);
+
+    expect($hook->getPriority())->toBe(5);
+});
+
+test('accepts negative priority for early execution', function () {
+    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod'], priority: -100);
+
+    expect($hook->getPriority())->toBe(-100);
+});
+
+test('accepts high priority value', function () {
+    $hook = new InvokeArrayHook([ArrayHookTestClass::class, 'staticMethod'], priority: 999);
+
+    expect($hook->getPriority())->toBe(999);
 });
 
 test('returns class and method name via getName for static methods', function () {

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use SpeedySpec\WP\Hook\Domain\Contracts\HookInvokableInterface;
+use SpeedySpec\WP\Hook\Domain\Contracts\HookPriorityInterface;
 use SpeedySpec\WP\Hook\Domain\Entities\InvokeObjectHook;
 use SpeedySpec\WP\Hook\Domain\Exceptions\HookIsNotCallableException;
 
@@ -13,6 +14,41 @@ test('implements HookInvokableInterface', function () {
     $hook = new InvokeObjectHook($closure);
 
     expect($hook)->toBeInstanceOf(HookInvokableInterface::class);
+});
+
+test('implements HookPriorityInterface', function () {
+    $closure = fn() => 'test';
+    $hook = new InvokeObjectHook($closure);
+
+    expect($hook)->toBeInstanceOf(HookPriorityInterface::class);
+});
+
+test('returns default priority of 10', function () {
+    $closure = fn() => 'test';
+    $hook = new InvokeObjectHook($closure);
+
+    expect($hook->getPriority())->toBe(10);
+});
+
+test('accepts custom priority', function () {
+    $closure = fn() => 'test';
+    $hook = new InvokeObjectHook($closure, priority: 5);
+
+    expect($hook->getPriority())->toBe(5);
+});
+
+test('accepts negative priority for early execution', function () {
+    $closure = fn() => 'test';
+    $hook = new InvokeObjectHook($closure, priority: -100);
+
+    expect($hook->getPriority())->toBe(-100);
+});
+
+test('accepts high priority value', function () {
+    $closure = fn() => 'test';
+    $hook = new InvokeObjectHook($closure, priority: 999);
+
+    expect($hook->getPriority())->toBe(999);
 });
 
 test('returns object hash for closure via getName', function () {
