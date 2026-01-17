@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/compare/v1.0.0...v1.0.1) (2026-01-17)
+
+
+### Bug Fixes
+
+* update code from PR feedback ([3ca9da1](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/commit/3ca9da13d1e5bc712a5ccc52e25911548b082b40))
+
 ## 1.0.0 (2026-01-17)
 
 
