@@ -361,12 +361,6 @@ graph LR
 | `LegacyDidActionUseCaseInterface` | `did_action()` | Get action execution count |
 | `LegacyDispatchDeprecatedActionHookUseCaseInterface` | `do_action_deprecated()` | Execute deprecated action |
 
-### Setup Use Case
-
-| Interface | Description |
-|-----------|-------------|
-| `SetupHookApiUseCaseInterface` | Initialize the hook system |
-
 ---
 
 ## Example: Implementing LegacyAddFilterUseCaseInterface

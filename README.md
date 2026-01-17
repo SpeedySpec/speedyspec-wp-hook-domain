@@ -48,9 +48,6 @@ Once configured, include the functions file and use the familiar WordPress API:
 ```php
 require_once 'vendor/speedyspec/speedyspec-wp-hook-domain/functions/plugins.php';
 
-// Initialize the hook system
-setup_hooks_api();
-
 // Add a filter using a named function
 function my_content_modifier($value) {
     return $value . ' modified';
@@ -164,6 +161,7 @@ graph TB
 src/
 ├── Contracts/              # Interfaces defining the API
 │   ├── HookContainerInterface.php
+│   ├── HookPriorityInterface.php  # NEW: Priority support
 │   ├── HookSubjectInterface.php
 │   ├── HookInvokableInterface.php
 │   ├── HookNameInterface.php
@@ -171,10 +169,9 @@ src/
 │   ├── HookFilterInterface.php      # NEW: Filter-specific callbacks
 │   ├── HookValidationInterface.php  # NEW: Validation callbacks
 │   └── UseCases/
-│       ├── HookPriorityInterface.php  # NEW: Priority support
 │       └── Legacy*UseCaseInterface.php
 ├── Entities/               # Callback wrappers (with built-in priority)
-│   ├── InvokeStringHook.php
+│   ├── StringHookInvoke.php
 │   ├── ArrayHookInvoke.php
 │   └── ObjectHookInvoke.php
 ├── ValueObject/            # Immutable value types

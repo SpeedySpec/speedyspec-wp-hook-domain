@@ -235,7 +235,7 @@ function remove_filter( $hook_name, $callback, $priority = 10 )
 {
     return HookServiceContainer::getInstance()
         ->get( LegacyRemoveFilterUseCaseInterface::class )
-        ->add( $hook_name, $callback, $priority);
+        ->removeHook( $hook_name, $callback, $priority);
 }
 
 /**
@@ -254,7 +254,7 @@ function remove_all_filters( $hook_name, $priority = false )
 {
     HookServiceContainer::getInstance()
         ->get( LegacyRemoveAllFiltersUseCaseInterface::class )
-        ->add( $hook_name, $priority);
+        ->removeHook( $hook_name, $priority);
 
     return true;
 }
@@ -301,7 +301,7 @@ function doing_filter( $hook_name = null )
 {
     return HookServiceContainer::getInstance()
         ->get( LegacyDoingFilterUseCaseInterface::class )
-        ->currentFilter() ?? false;
+        ->isDoingFilter() ?? false;
 }
 
 /**
@@ -320,7 +320,7 @@ function did_filter( $hook_name )
 {
     return HookServiceContainer::getInstance()
         ->get( LegacyDidFilterUseCaseInterface::class )
-        ->currentFilter() ?? false;
+        ->didFilter() ?? false;
 }
 
 /**
@@ -459,20 +459,22 @@ function has_action( $hook_name, $callback = false, $priority = false )
 /**
  * Removes a callback function from an action hook.
  *
- * This can be used to remove default functions attached to a specific action
- * hook and possibly replace them with a substitute.
+ * This can be used to remove default functions attached to a specific action hook and possibly replace them with a
+ * substitute.
  *
- * To remove a hook, the `$callback` and `$priority` arguments must match
- * when the hook was added. This goes for both filters and actions. No warning
- * will be given on removal failure.
+ * To remove a hook, the `$callback` and `$priority` arguments must match when the hook was added. This goes for both
+ * filters and actions. No warning will be given on removal failure.
  *
- * @param string                $hook_name The action hook to which the function to be removed is hooked.
- * @param callable|string|array $callback  The name of the function which should be removed.
- *                                         This function can be called unconditionally to speculatively remove
- *                                         a callback that may or may not exist.
- * @param int                   $priority  Optional. The exact priority used when adding the original
- *                                         action callback. Default 10.
- * @return bool Whether the function is removed.
+ * @param string $hook_name
+ *   The action hook to which the function to be removed is hooked.
+ * @param callable|string|array $callback
+ *   The name of the function which should be removed.
+ *
+ *   This function can be called unconditionally to speculatively remove a callback that may or may not exist.
+ * @param int $priority
+ *   Optional. The exact priority used when adding the original action callback. Default 10.
+ * @return bool
+ *   Whether the function is removed.
  *
  * @since 1.2.0 WordPress
  * @since 0.0.1 speedyspec-wp-hook-functions
@@ -481,7 +483,7 @@ function remove_action( $hook_name, $callback, $priority = 10 )
 {
     HookServiceContainer::getInstance()
         ->get( LegacyRemoveActionUseCaseInterface::class )
-        ->add( $hook_name, $priority);
+        ->removeHook( $hook_name, $callback, $priority);
 
     return true;
 }
@@ -546,7 +548,7 @@ function doing_action( $hook_name = null )
 {
     return HookServiceContainer::getInstance()
         ->get( LegacyDoingActionUseCaseInterface::class )
-        ->currentFilter() ?? false;
+        ->isDoingAction() ?? false;
 }
 
 /**
