@@ -145,7 +145,7 @@ use SpeedySpec\WP\Hook\Domain\HookServiceContainer;
 use SpeedySpec\WP\Hook\Domain\Services\CurrentHookService;
 use SpeedySpec\WP\Hook\Domain\Services\HookRunAmountService;
 use SpeedySpec\WP\Hook\Domain\Contracts\HookContainerInterface;
-use SpeedySpec\WP\Hook\Infra\Memory\Services\MemoryHookContainer;
+use SpeedySpec\WP\Hook\Infra\Memory\Services\WPHookContainer;
 
 $container = HookServiceContainer::getInstance();
 
@@ -153,7 +153,7 @@ $container = HookServiceContainer::getInstance();
 $container
     ->add(CurrentHookService::class, fn() => new CurrentHookService())
     ->add(HookRunAmountService::class, fn() => new HookRunAmountService())
-    ->add(HookContainerInterface::class, fn($c) => new MemoryHookContainer(
+    ->add(HookContainerInterface::class, fn($c) => new WPHookContainer(
         $c->get(HookRunAmountService::class),
         $c->get(CurrentHookService::class)
     ));
