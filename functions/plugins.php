@@ -272,7 +272,7 @@ function current_filter()
 {
     return HookServiceContainer::getInstance()
         ->get( LegacyCurrentFilterUseCaseInterface::class )
-        ->currentFilter() ?? false;
+        ->currentFilter();
 }
 
 /**
@@ -320,7 +320,7 @@ function did_filter( $hook_name )
 {
     return HookServiceContainer::getInstance()
         ->get( LegacyDidFilterUseCaseInterface::class )
-        ->didFilter() ?? false;
+        ->didFilter();
 }
 
 /**

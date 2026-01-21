@@ -10,9 +10,16 @@ interface HookSubjectInterface
 
     public function remove( HookInvokableInterface|HookActionInterface|HookFilterInterface $callback ): void;
 
+    public function removeAll(?int $priority = null): void;
+
     public function dispatch( ...$args ): void;
 
     public function filter( mixed $value, ...$args ): mixed;
+
+    public function hasCallbacks(
+        HookInvokableInterface|HookActionInterface|HookFilterInterface|null $callback = null,
+        ?int $priority = null,
+    ): bool;
 
     public function sort(): void;
 }
