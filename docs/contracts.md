@@ -373,7 +373,7 @@ use SpeedySpec\WP\Hook\Domain\Entities\StringHookInvoke;
 use SpeedySpec\WP\Hook\Domain\Entities\ArrayHookInvoke;
 use SpeedySpec\WP\Hook\Domain\Entities\ObjectHookInvoke;
 
-class LegacyAddFilterUseCase implements LegacyAddFilterUseCaseInterface
+final class LegacyAddFilterUseCase implements LegacyAddFilterUseCaseInterface
 {
     public function __construct(
         private HookContainerInterface $container

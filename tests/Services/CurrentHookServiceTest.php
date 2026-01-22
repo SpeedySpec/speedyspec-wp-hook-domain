@@ -176,3 +176,127 @@ describe('edge cases', function () {
             ->and($service->hookTraceback())->toBe(['init', 'wp_loaded']);
     });
 });
+
+/**
+ * Specification tests for current_filter() behavior.
+ *
+ * ## Specification
+ *
+ * - As a user, when called during filter execution, I want the name of the currently executing filter returned.
+ * - As a user, when called outside of any filter execution, I want false returned.
+ * - As a user, when filters are nested (a filter callback triggers another filter), I want the innermost (most recent)
+ *   filter name returned.
+ */
+describe('current_filter specification', function () {
+    test('returns null when called outside of any filter execution', function () {
+        // Specification: when called outside of any filter execution, return false (null in domain)
+        expect($this->service->getCurrentHook())->toBeNull();
+    });
+
+    test('returns current filter name during filter execution', function () {
+        // Specification: when called during filter execution, return the filter name
+        $this->service->addHook('the_content');
+
+        expect($this->service->getCurrentHook()->getName())->toBe('the_content');
+    });
+
+    test('returns innermost filter name when filters are nested', function () {
+        // Specification: when filters are nested, return the innermost filter name
+        $this->service->addHook('the_content');
+        $this->service->addHook('the_title');
+        $this->service->addHook('wp_trim_words');
+
+        expect($this->service->getCurrentHook()->getName())->toBe('wp_trim_words');
+    });
+
+    test('returns previous filter after innermost filter completes', function () {
+        // Nested filter scenario: when inner filter completes, outer filter resumes
+        $this->service->addHook('the_content');
+        $this->service->addHook('the_title');
+
+        // Inner filter completes
+        $this->service->removeHook();
+
+        expect($this->service->getCurrentHook()->getName())->toBe('the_content');
+    });
+});
+
+/**
+ * Specification tests for doing_filter() behavior.
+ *
+ * ## Specification
+ *
+ * - As a user, given no hook name argument, I want to know whether any filter is currently executing.
+ * - As a user, given a specific hook name, I want to know whether that filter is anywhere in the current execution
+ *   stack.
+ * - As a user, when filters are nested, I want to be able to detect any filter in the stack, not just the innermost
+ *   one.
+ * - As a user, when called outside of any filter execution, I want false returned.
+ */
+describe('doing_filter specification (via hookTraceback)', function () {
+    test('hookTraceback is empty when called outside of any filter execution', function () {
+        // Specification: when called outside of any filter execution, return false
+        // Using hookTraceback to check if any filter is executing
+        expect($this->service->hookTraceback())->toBe([])
+            ->and(count($this->service->hookTraceback()) > 0)->toBeFalse();
+    });
+
+    test('hookTraceback is not empty when any filter is executing', function () {
+        // Specification: given no hook name argument, know whether any filter is executing
+        $this->service->addHook('the_content');
+
+        expect(count($this->service->hookTraceback()) > 0)->toBeTrue();
+    });
+
+    test('hookTraceback contains specific hook name when that filter is executing', function () {
+        // Specification: given a specific hook name, know whether it's in the execution stack
+        $this->service->addHook('init');
+        $this->service->addHook('the_content');
+        $this->service->addHook('the_title');
+
+        expect(in_array('the_content', $this->service->hookTraceback(), true))->toBeTrue()
+            ->and(in_array('init', $this->service->hookTraceback(), true))->toBeTrue()
+            ->and(in_array('the_title', $this->service->hookTraceback(), true))->toBeTrue();
+    });
+
+    test('can detect any filter in nested stack not just innermost', function () {
+        // Specification: when filters are nested, detect any filter in stack
+        $this->service->addHook('outer_filter');
+        $this->service->addHook('middle_filter');
+        $this->service->addHook('inner_filter');
+
+        // Current hook only returns innermost
+        expect($this->service->getCurrentHook()->getName())->toBe('inner_filter');
+
+        // But hookTraceback can detect all filters in stack
+        $traceback = $this->service->hookTraceback();
+        expect(in_array('outer_filter', $traceback, true))->toBeTrue()
+            ->and(in_array('middle_filter', $traceback, true))->toBeTrue()
+            ->and(in_array('inner_filter', $traceback, true))->toBeTrue();
+    });
+
+    test('hookTraceback does not contain hook after it completes', function () {
+        // Filter completes and is removed from stack
+        $this->service->addHook('outer_filter');
+        $this->service->addHook('inner_filter');
+
+        // Inner filter completes
+        $this->service->removeHook();
+
+        expect(in_array('inner_filter', $this->service->hookTraceback(), true))->toBeFalse()
+            ->and(in_array('outer_filter', $this->service->hookTraceback(), true))->toBeTrue();
+    });
+
+    test('can detect same hook name appearing multiple times in nested calls', function () {
+        // Recursive filter scenario: same filter called within itself
+        $this->service->addHook('the_content');
+        $this->service->addHook('some_other_filter');
+        $this->service->addHook('the_content'); // Recursive call
+
+        $traceback = $this->service->hookTraceback();
+
+        // Count occurrences of 'the_content' in traceback
+        $count = array_count_values($traceback)['the_content'] ?? 0;
+        expect($count)->toBe(2);
+    });
+});

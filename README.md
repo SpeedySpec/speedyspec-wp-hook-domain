@@ -133,7 +133,7 @@ graph TB
     subgraph "Domain Layer"
         E[HookContainerInterface]
         F[HookSubjectInterface]
-        G[Entities: InvokeStringHook, ArrayHookInvoke, ObjectHookInvoke]
+        G[Entities: StringHookInvoke, ArrayHookInvoke, ObjectHookInvoke]
         H[Value Objects: StringHookName, ClassNameHookName]
     end
 

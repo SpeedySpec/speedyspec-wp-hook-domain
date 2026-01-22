@@ -17,7 +17,7 @@ classDiagram
         +getPriority() int
     }
 
-    class ArrayHookInvoke {
+    class StringHookInvoke {
         -string callable
         -int priority
         +__construct(string $callable, int $priority = 10)
@@ -45,10 +45,10 @@ classDiagram
         +getPriority() int
     }
 
-    HookInvokableInterface <|.. ArrayHookInvoke
+    HookInvokableInterface <|.. StringHookInvoke
     HookInvokableInterface <|.. ArrayHookInvoke
     HookInvokableInterface <|.. ObjectHookInvoke
-    HookPriorityInterface <|.. ArrayHookInvoke
+    HookPriorityInterface <|.. StringHookInvoke
     HookPriorityInterface <|.. ArrayHookInvoke
     HookPriorityInterface <|.. ObjectHookInvoke
 ```
@@ -57,13 +57,13 @@ classDiagram
 
 | Entity | Handles | Example |
 |--------|---------|---------|
-| `ArrayHookInvoke` | Function names | `'strtoupper'` |
+| `StringHookInvoke` | Function names | `'strtoupper'` |
 | `ArrayHookInvoke` | Array callables | `[$object, 'method']`, `['Class', 'staticMethod']` |
 | `ObjectHookInvoke` | Closures and invokables | `fn($x) => $x`, `new InvokableClass()` |
 
 ---
 
-## ArrayHookInvoke
+## StringHookInvoke
 
 Wraps a string function name for execution.
 
@@ -92,7 +92,7 @@ public function __construct(
 Returns the function name as the identifier.
 
 ```php
-$hook = new ArrayHookInvoke('strtoupper');
+$hook = new StringHookInvoke('strtoupper');
 $hook->getName(); // Returns: 'strtoupper'
 ```
 
@@ -103,7 +103,7 @@ $hook->getName(); // Returns: 'strtoupper'
 Executes the function with the given arguments.
 
 ```php
-$hook = new ArrayHookInvoke('strtoupper');
+$hook = new StringHookInvoke('strtoupper');
 $result = $hook('hello'); // Returns: 'HELLO'
 ```
 
@@ -112,7 +112,7 @@ $result = $hook('hello'); // Returns: 'HELLO'
 Returns the execution priority.
 
 ```php
-$hook = new ArrayHookInvoke('strtoupper', priority: 5);
+$hook = new StringHookInvoke('strtoupper', priority: 5);
 $hook->getPriority(); // Returns: 5
 ```
 
@@ -367,7 +367,7 @@ The library automatically selects the appropriate entity based on the callback t
 function createInvokable(callable $callback, int $priority = 10): HookInvokableInterface
 {
     return match (true) {
-        is_string($callback) => new ArrayHookInvoke($callback, $priority),
+        is_string($callback) => new StringHookInvoke($callback, $priority),
         is_array($callback)  => new ArrayHookInvoke($callback, $priority),
         default              => new ObjectHookInvoke($callback, $priority),
     };
