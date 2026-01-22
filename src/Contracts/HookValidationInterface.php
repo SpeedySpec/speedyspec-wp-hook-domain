@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SpeedySpec\WP\Hook\Domain\Contracts;
 
-interface HookNameInterface
+interface HookValidationInterface
 {
-    public function getName(): string;
+    public function validate( ...$args ): bool;
 }

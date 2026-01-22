@@ -13,12 +13,24 @@
     "autoload": {
         "psr-4": {
             "SpeedySpec\\WP\\Hook\\Domain\\": "src/"
-        }
+        },
+        "files": [
+            "functions/plugins.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
             "SpeedySpec\\WP\\Hook\\Domain\\Tests\\": "tests/"
         }
+    },
+    "archive": {
+        "exclude": [
+            "/docs",
+            "/tests",
+            "/.github",
+            "/phpunit.xml",
+            "/CHANGELOG.md"
+        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SpeedySpec\WP\Hook\Domain\Contracts\UseCases;
 
-interface LegacyDidFilterUseCaseInterface {
+interface LegacyDidFilterUseCaseInterface
+{
     public function didFilter(string $name): int;
 }

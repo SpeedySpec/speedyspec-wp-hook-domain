@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace SpeedySpec\WP\Hook\Domain\Services;
 
 use SpeedySpec\WP\Hook\Domain\Contracts\HookNameInterface;
+use SpeedySpec\WP\Hook\Domain\Contracts\HookRunAmountInterface;
 
-class HookRunAmountService {
+class HookRunAmountService implements HookRunAmountInterface
+{
 
     /**
      * @var array<string, int>

@@ -6,5 +6,5 @@ namespace SpeedySpec\WP\Hook\Domain\Contracts\UseCases;
 
 interface LegacyDispatchActionHookUseCaseInterface
 {
-    public function filter(string $hook_name, ...$args): mixed;
+    public function dispatch(string $hook_name, ...$args): void;
 }

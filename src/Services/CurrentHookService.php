@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SpeedySpec\WP\Hook\Domain\Services;
 
+use SpeedySpec\WP\Hook\Domain\Contracts\CurrentHookInterface;
 use SpeedySpec\WP\Hook\Domain\Contracts\HookNameInterface;
 use SpeedySpec\WP\Hook\Domain\ValueObject\StringHookName;
 
-class CurrentHookService
+class CurrentHookService implements CurrentHookInterface
 {
     /**
      * @param string[] $hooks

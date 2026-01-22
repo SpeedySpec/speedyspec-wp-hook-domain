@@ -3,21 +3,57 @@
 declare(strict_types=1);
 
 use SpeedySpec\WP\Hook\Domain\Contracts\HookInvokableInterface;
-use SpeedySpec\WP\Hook\Domain\Entities\InvokeObjectHook;
+use SpeedySpec\WP\Hook\Domain\Contracts\HookPriorityInterface;
+use SpeedySpec\WP\Hook\Domain\Entities\ObjectHookInvoke;
 use SpeedySpec\WP\Hook\Domain\Exceptions\HookIsNotCallableException;
 
-covers(InvokeObjectHook::class);
+covers(ObjectHookInvoke::class);
 
 test('implements HookInvokableInterface', function () {
     $closure = fn() => 'test';
-    $hook = new InvokeObjectHook($closure);
+    $hook = new ObjectHookInvoke($closure);
 
     expect($hook)->toBeInstanceOf(HookInvokableInterface::class);
 });
 
+test('implements HookPriorityInterface', function () {
+    $closure = fn() => 'test';
+    $hook = new ObjectHookInvoke($closure);
+
+    expect($hook)->toBeInstanceOf(HookPriorityInterface::class);
+});
+
+test('returns default priority of 10', function () {
+    $closure = fn() => 'test';
+    $hook = new ObjectHookInvoke($closure);
+
+    expect($hook->getPriority())->toBe(10);
+});
+
+test('accepts custom priority', function () {
+    $closure = fn() => 'test';
+    $hook = new ObjectHookInvoke($closure, priority: 5);
+
+    expect($hook->getPriority())->toBe(5);
+});
+
+test('accepts negative priority for early execution', function () {
+    $closure = fn() => 'test';
+    $hook = new ObjectHookInvoke($closure, priority: -100);
+
+    expect($hook->getPriority())->toBe(-100);
+});
+
+test('accepts high priority value', function () {
+    $closure = fn() => 'test';
+    $hook = new ObjectHookInvoke($closure, priority: 999);
+
+    expect($hook->getPriority())->toBe(999);
+});
+
 test('returns object hash for closure via getName', function () {
     $closure = fn() => 'test';
-    $hook = new InvokeObjectHook($closure);
+    $hook = new ObjectHookInvoke($closure);
 
     $name = $hook->getName();
 
@@ -26,7 +62,7 @@ test('returns object hash for closure via getName', function () {
 
 test('returns object hash with __invoke suffix for invokable objects', function () {
     $invokable = new InvokableTestClass();
-    $hook = new InvokeObjectHook($invokable);
+    $hook = new ObjectHookInvoke($invokable);
 
     $name = $hook->getName();
 
@@ -35,7 +71,7 @@ test('returns object hash with __invoke suffix for invokable objects', function 
 
 test('invokes closure with arguments', function () {
     $closure = fn(string $name) => "Hello, {$name}!";
-    $hook = new InvokeObjectHook($closure);
+    $hook = new ObjectHookInvoke($closure);
 
     $result = $hook('World');
 
@@ -44,7 +80,7 @@ test('invokes closure with arguments', function () {
 
 test('invokes invokable object with arguments', function () {
     $invokable = new InvokableTestClass();
-    $hook = new InvokeObjectHook($invokable);
+    $hook = new ObjectHookInvoke($invokable);
 
     $result = $hook('test');
 
@@ -54,13 +90,13 @@ test('invokes invokable object with arguments', function () {
 test('throws exception when object is not callable', function () {
     $nonCallable = new \stdClass();
 
-    expect(fn() => new InvokeObjectHook($nonCallable))
+    expect(fn() => new ObjectHookInvoke($nonCallable))
         ->toThrow(HookIsNotCallableException::class);
 });
 
 test('caches name on construction', function () {
     $closure = fn() => 'test';
-    $hook = new InvokeObjectHook($closure);
+    $hook = new ObjectHookInvoke($closure);
 
     $name1 = $hook->getName();
     $name2 = $hook->getName();
@@ -70,7 +106,7 @@ test('caches name on construction', function () {
 
 test('handles closure with multiple arguments', function () {
     $closure = fn(int $a, int $b, int $c) => $a + $b + $c;
-    $hook = new InvokeObjectHook($closure);
+    $hook = new ObjectHookInvoke($closure);
 
     $result = $hook(1, 2, 3);
 
@@ -79,7 +115,7 @@ test('handles closure with multiple arguments', function () {
 
 test('handles closure returning null', function () {
     $closure = fn() => null;
-    $hook = new InvokeObjectHook($closure);
+    $hook = new ObjectHookInvoke($closure);
 
     $result = $hook();
 
@@ -88,7 +124,7 @@ test('handles closure returning null', function () {
 
 test('handles closure with no arguments', function () {
     $closure = fn() => 'no args';
-    $hook = new InvokeObjectHook($closure);
+    $hook = new ObjectHookInvoke($closure);
 
     $result = $hook();
 
@@ -97,7 +133,7 @@ test('handles closure with no arguments', function () {
 
 test('handles invokable with state', function () {
     $invokable = new StatefulInvokableClass('prefix');
-    $hook = new InvokeObjectHook($invokable);
+    $hook = new ObjectHookInvoke($invokable);
 
     $result = $hook('value');
 
@@ -108,8 +144,8 @@ test('different closures have different names', function () {
     $closure1 = fn() => 'one';
     $closure2 = fn() => 'two';
 
-    $hook1 = new InvokeObjectHook($closure1);
-    $hook2 = new InvokeObjectHook($closure2);
+    $hook1 = new ObjectHookInvoke($closure1);
+    $hook2 = new ObjectHookInvoke($closure2);
 
     expect($hook1->getName())->not->toBe($hook2->getName());
 });
@@ -117,8 +153,8 @@ test('different closures have different names', function () {
 test('same closure reference has same name', function () {
     $closure = fn() => 'test';
 
-    $hook1 = new InvokeObjectHook($closure);
-    $hook2 = new InvokeObjectHook($closure);
+    $hook1 = new ObjectHookInvoke($closure);
+    $hook2 = new ObjectHookInvoke($closure);
 
     expect($hook1->getName())->toBe($hook2->getName());
 });

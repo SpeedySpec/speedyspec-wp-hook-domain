@@ -37,20 +37,20 @@ describe('hook tracking', function () {
         $this->service->addHook('init');
         $this->service->addHook('wp_loaded');
 
-        $this->service->removeHook('wp_loaded');
+        $this->service->removeHook();
 
         expect($this->service->getCurrentHook()->getName())->toBe('init');
     });
 
     test('returns null after removing all hooks', function () {
         $this->service->addHook('init');
-        $this->service->removeHook('init');
+        $this->service->removeHook();
 
         expect($this->service->getCurrentHook())->toBeNull();
     });
 
     test('removeHook does nothing when no hooks exist', function () {
-        $this->service->removeHook('nonexistent');
+        $this->service->removeHook();
 
         expect($this->service->getCurrentHook())->toBeNull();
     });
@@ -76,7 +76,7 @@ describe('hook traceback', function () {
     test('reflects removed hooks', function () {
         $this->service->addHook('init');
         $this->service->addHook('wp_loaded');
-        $this->service->removeHook('wp_loaded');
+        $this->service->removeHook();
 
         expect($this->service->hookTraceback())->toBe(['init']);
     });
@@ -107,7 +107,7 @@ describe('callback tracking', function () {
         $this->service->addCallback('callback_one');
         $this->service->addCallback('callback_two');
 
-        $this->service->removeCallback('callback_two');
+        $this->service->removeCallback();
 
         expect($this->service->getCurrentCallback())->toBe('callback_one');
     });
