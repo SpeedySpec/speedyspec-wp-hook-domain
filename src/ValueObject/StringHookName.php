@@ -3,19 +3,29 @@
 declare(strict_types=1);
 
 namespace SpeedySpec\WP\Hook\Domain\ValueObject;
-class StringHookName implements \SpeedySpec\WP\Hook\Domain\Contracts\HookNameInterface
+
+use SpeedySpec\WP\Hook\Domain\Contracts\HookNameInterface;
+
+/**
+ * Value object representing a hook name as a plain string.
+ *
+ * The standard hook name type for WordPress compatibility, accepting any string including dynamic hook names with
+ * interpolated values. Use {@link ClassNameHookName} when referencing class-based hook names for better IDE support.
+ *
+ * @since 1.0.0
+ */
+class StringHookName implements HookNameInterface
 {
     /**
-     * HookNameString maintains backwards compatibility with the WordPress API.
-     *
-     * It is used for hooks that are strings, like most actions and filters.
-     *
-     * Can also be used for hooks that use `::class` for hooks.
+     * @since 1.0.0
      */
     public function __construct(private string $name)
     {
     }
 
+    /**
+     * @since 1.0.0
+     */
     public function getName(): string
     {
         return $this->name;

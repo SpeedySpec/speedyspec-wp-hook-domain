@@ -95,7 +95,7 @@ This implements the **Observer Pattern** where:
 
 Callbacks are wrapped in `HookInvokableInterface` implementations, allowing different types of callables to be handled uniformly:
 
-- `ArrayHookInvoke` - Function name strings (e.g., `'strtoupper'`)
+- `StringHookInvoke` - Function name strings (e.g., `'strtoupper'`)
 - `ArrayHookInvoke` - Array callables (e.g., `[$object, 'method']` or `['ClassName', 'staticMethod']`)
 - `ObjectHookInvoke` - Closures and invokable objects
 
@@ -133,7 +133,7 @@ classDiagram
         +validate(...$args) bool
     }
 
-    class ArrayHookInvoke {
+    class StringHookInvoke {
         -string callable
         -int priority
         +getName() string
@@ -157,10 +157,10 @@ classDiagram
         +getPriority() int
     }
 
-    HookInvokableInterface <|.. ArrayHookInvoke
+    HookInvokableInterface <|.. StringHookInvoke
     HookInvokableInterface <|.. ArrayHookInvoke
     HookInvokableInterface <|.. ObjectHookInvoke
-    HookPriorityInterface <|.. ArrayHookInvoke
+    HookPriorityInterface <|.. StringHookInvoke
     HookPriorityInterface <|.. ArrayHookInvoke
     HookPriorityInterface <|.. ObjectHookInvoke
 ```
