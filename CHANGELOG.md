@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.1](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/compare/v1.1.0...v1.1.1) (2026-01-22)
+
+
+### Bug Fixes
+
+* documentation and tests improvements ([b72af1b](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/commit/b72af1bde36a8f50bbe6373000cacfff31bc73b1))
+
+
+### Documentation
+
+* add docblocks to every php element ([ab1fbf7](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/commit/ab1fbf78226646a1dda037c6c137adf4773f803b))
+
 ## [1.1.0](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/compare/v1.0.1...v1.1.0) (2026-01-22)
 
 
