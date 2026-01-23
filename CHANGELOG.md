@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/compare/v1.1.1...v1.1.2) (2026-01-23)
+
+
+### Documentation
+
+* update contracts and value objects from changes. ([1222764](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/commit/1222764aa28a2c567b577ca881af6e66c47efe17))
+
 ## [1.1.1](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/compare/v1.1.0...v1.1.1) (2026-01-22)
 
 
