@@ -28,8 +28,14 @@
             "/docs",
             "/tests",
             "/.github",
+            "/.git",
+            "/.editorconfig",
+            "/.gitattributes",
+            "/.gitignore",
             "/phpunit.xml",
-            "/CHANGELOG.md"
+            "/CHANGELOG.md",
+            "/.release-please-manifest.json",
+            "/release-please-config.json"
         ]
     },
     "minimum-stability": "dev",
