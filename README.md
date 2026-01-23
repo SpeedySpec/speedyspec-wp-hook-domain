@@ -161,13 +161,16 @@ graph TB
 src/
 ├── Contracts/              # Interfaces defining the API
 │   ├── HookContainerInterface.php
-│   ├── HookPriorityInterface.php  # NEW: Priority support
+│   ├── HookPriorityInterface.php
 │   ├── HookSubjectInterface.php
 │   ├── HookInvokableInterface.php
 │   ├── HookNameInterface.php
-│   ├── HookActionInterface.php      # NEW: Action-specific callbacks
-│   ├── HookFilterInterface.php      # NEW: Filter-specific callbacks
-│   ├── HookValidationInterface.php  # NEW: Validation callbacks
+│   ├── HookActionInterface.php
+│   ├── HookFilterInterface.php
+│   ├── HookValidationInterface.php
+│   ├── CalledDeprecatedHookInterface.php
+│   ├── CurrentHookInterface.php
+│   ├── HookRunAmountInterface.php
 │   └── UseCases/
 │       └── Legacy*UseCaseInterface.php
 ├── Entities/               # Callback wrappers (with built-in priority)

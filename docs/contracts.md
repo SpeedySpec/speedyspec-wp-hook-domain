@@ -54,6 +54,23 @@ classDiagram
         +validate(...args) bool
     }
 
+    class CurrentHookInterface {
+        <<interface>>
+        +getCurrentHook() HookNameInterface|null
+        +getCurrentCallback() string|null
+    }
+
+    class HookRunAmountInterface {
+        <<interface>>
+        +getRunAmount(HookNameInterface) int
+        +incrementRunAmount(HookNameInterface) void
+    }
+
+    class CalledDeprecatedHookInterface {
+        <<interface>>
+        +calledDeprecatedHook(string, string, string, string) void
+    }
+
     HookContainerInterface --> HookSubjectInterface : manages
     HookContainerInterface --> HookNameInterface : uses
     HookSubjectInterface --> HookInvokableInterface : accepts
@@ -301,6 +318,89 @@ interface HookNameInterface {
 | Method | Description |
 |--------|-------------|
 | `getName()` | Return the string representation of the hook name |
+
+---
+
+### CurrentHookInterface
+
+Provides tracking of currently executing hooks and callbacks.
+
+**Namespace:** `SpeedySpec\WP\Hook\Domain\Contracts`
+
+```php
+interface CurrentHookInterface {
+    public function addHook(string $name): void;
+    public function removeHook(): void;
+    public function getCurrentHook(): ?HookNameInterface;
+    public function hookTraceback(): array;
+    public function addCallback(string $name): void;
+    public function removeCallback(): void;
+    public function getCurrentCallback(): ?string;
+    public function callbackTraceback(): array;
+    public function entireCallbackTraceback(): array;
+}
+```
+
+**Methods:**
+
+| Method | Description |
+|--------|-------------|
+| `addHook()` | Push a hook onto the execution stack |
+| `removeHook()` | Pop the current hook from the execution stack |
+| `getCurrentHook()` | Get the currently executing hook |
+| `hookTraceback()` | Get the full stack of executing hooks |
+| `addCallback()` | Track a callback execution within the current hook |
+| `removeCallback()` | Remove the current callback from tracking |
+| `getCurrentCallback()` | Get the currently executing callback |
+| `callbackTraceback()` | Get all callbacks for the current hook |
+| `entireCallbackTraceback()` | Get callbacks for all hooks |
+
+---
+
+### HookRunAmountInterface
+
+Tracks the execution count for hooks.
+
+**Namespace:** `SpeedySpec\WP\Hook\Domain\Contracts`
+
+```php
+interface HookRunAmountInterface {
+    public function getRunAmount(HookNameInterface $name): int;
+    public function incrementRunAmount(HookNameInterface $name): void;
+}
+```
+
+**Methods:**
+
+| Method | Description |
+|--------|-------------|
+| `getRunAmount()` | Get the number of times a hook has been executed |
+| `incrementRunAmount()` | Increment the execution count for a hook |
+
+---
+
+### CalledDeprecatedHookInterface
+
+Handles deprecated hook functionality with notices.
+
+**Namespace:** `SpeedySpec\WP\Hook\Domain\Contracts`
+
+```php
+interface CalledDeprecatedHookInterface {
+    public function calledDeprecatedHook(
+        string $hookName,
+        string $version,
+        string $replacement = '',
+        string $message = ''
+    ): void;
+}
+```
+
+**Methods:**
+
+| Method | Description |
+|--------|-------------|
+| `calledDeprecatedHook()` | Trigger a deprecation notice when a deprecated hook is used |
 
 ---
 

@@ -329,29 +329,23 @@ $hook->getName(); // 'event:App\Events\UserCreated'
 
 ---
 
-## Migration from HookInvokableOption
+## Best Practices
 
-In previous versions, `HookInvokableOption` was used to configure callback priority and accepted arguments. This has been simplified:
+When working with value objects in this library:
 
-**Before (deprecated):**
+1. **Always use value comparison**: Compare value objects by their `getName()` result, not by reference
+2. **Create new instances**: Since value objects are immutable, create new instances for different values
+3. **Use type hints**: Leverage `HookNameInterface` in type hints for flexibility
+4. **Choose the right type**: Use `StringHookName` for traditional hooks, `ClassNameHookName` for event-driven architectures
+
 ```php
-// Old API - no longer supported
-$options = new HookInvokableOption(priority: 10, acceptedArgs: 1);
-$container->add($hookName, $invokable, $options);
-```
+// Good: Value comparison
+if ($hook1->getName() === $hook2->getName()) {
+    // Same hook name
+}
 
-**After (current):**
-```php
-// Priority is now part of the entity
-$invokable = new ObjectHookInvoke(
-    fn($value) => strtoupper($value),
-    priority: 10  // Priority passed directly to entity
-);
-$container->add($hookName, $invokable);
+// Bad: Reference comparison
+if ($hook1 === $hook2) {
+    // Will be false even if names match
+}
 ```
-
-This change:
-- Simplifies the API
-- Makes priority a property of the callback itself
-- Reduces the number of objects needed
-- Aligns with how priority is conceptually tied to the callback
