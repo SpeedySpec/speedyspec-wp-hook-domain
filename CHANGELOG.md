@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/compare/v1.1.2...v1.1.3) (2026-01-27)
+
+
+### Bug Fixes
+
+* add attributes to hook domain for parsing hooks from code ([de52ba3](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/commit/de52ba30f979cbab46fdadc7bd02e59830971d0e))
+
 ## [1.1.2](https://github.com/SpeedySpec/speedyspec-wp-hook-domain/compare/v1.1.1...v1.1.2) (2026-01-23)
 
 
